@@ -1,0 +1,9 @@
+{
+  "pages": [
+    { "id": "index", "title": "Compose a hierarchy", "step": "01" },
+    { "id": "changing-space", "title": "Keep relationships through change", "step": "02" },
+    { "id": "investigation", "title": "Try a real composition", "step": "03" }
+  ],
+  "journeys": [{ "id": "concepts", "title": "Core concepts", "pages": ["index", "changing-space", "investigation"] }],
+  "returnLabel": "Axiomatic overview"
+}

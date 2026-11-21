@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <title>Playground · Axiomatic</title>
+    <style>
+      :root { color-scheme: light dark; scrollbar-gutter: stable; background: light-dark(#fff,#14171c); color: light-dark(#252b33,#e4e8ee); font-family: system-ui,sans-serif; --color-background: light-dark(#fff,#14171c); --color-background-secondary: light-dark(#f4f6f8,#20252d); --color-text: light-dark(#252b33,#e4e8ee); --color-text-aside: light-dark(#657080,#a5afbe); --color-link: light-dark(#245e9c,#9dc8f5); --color-accent: light-dark(#e4e8ee,#38414d); }
+      body { margin: 0; }
+      header { border-bottom: 1px solid var(--color-accent); padding: 20px max(24px,calc((100vw - 1160px)/2)); display:flex; align-items:baseline; gap:14px; }
+      header a { color: inherit; text-decoration: none; font-weight: 650; }
+      header span { color: var(--color-text-aside); font-size: 14px; }
+      main { max-width: 1160px; padding: 28px 24px 64px; margin: auto; }
+      a:focus-visible { outline: 2px solid var(--color-link); outline-offset: 4px; }
+    </style>
+  </head>
+  <body>
+    <header><a href="../../../getting-started/investigation.html#compose-your-own">Axiomatic</a><span>Playground</span></header>
+    <main><axiomatic-workspace></axiomatic-workspace><noscript>This playground needs JavaScript to edit and adapt compositions.</noscript></main>
+    <script type="module" src="../components/layout-examples.js"></script>
+  </body>
+</html>

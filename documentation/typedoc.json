@@ -1,0 +1,8 @@
+{
+  "tsconfig": "../tsconfig.json",
+  "entryPoints": [
+    "components/source/layout-examples.ts"
+  ],
+  "readme": "index.md",
+  "projectDocuments": []
+}

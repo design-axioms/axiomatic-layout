@@ -1,0 +1,9 @@
+{
+  "name": "Axiomatic",
+  "packageRoot": "..",
+  "typedoc": "typedoc.json",
+  "onboarding": "chapters.json",
+  "documentationRoots": [
+    { "path": "documentation/onboarding", "section": "getting-started", "label": "Core concepts", "page": "getting-started/index.html" }
+  ]
+}

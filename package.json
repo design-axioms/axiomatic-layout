@@ -1,0 +1,29 @@
+{
+  "name": "axiomatic-layout-exploration",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "pnpm@10.26.2",
+  "scripts": {
+    "docs:dev": "node scripts/docs-dev.ts",
+    "docs:build": "pnpm components:build && ts-docs-fresh build . --out .docs-site --fixed-sources",
+    "docs:serve": "ts-docs-fresh serve .docs-site --port 4326",
+    "study": "python3 -m http.server 8786 --bind 127.0.0.1 --directory experiments/01-reading-path",
+    "components:build": "node scripts/build-components.ts",
+    "check": "tsc -p tsconfig.json",
+    "format": "prettier --ignore-path .prettierignore --write \"scripts/*.ts\" \"tests/*.ts\" \"documentation/review/**/*.ts\" \"documentation/components/source/*.ts\" \"documentation/components/source/*.css\" \"!**/*.generated.css\" package.json tsconfig.json",
+    "format:check": "prettier --ignore-path .prettierignore --check \"scripts/*.ts\" \"tests/*.ts\" \"documentation/review/**/*.ts\" \"documentation/components/source/*.ts\" \"documentation/components/source/*.css\" \"!**/*.generated.css\" package.json tsconfig.json",
+    "test": "node --test tests/*.test.ts",
+    "fixtures:build": "node scripts/build-fixtures.ts"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.4",
+    "esbuild": "0.25.12",
+    "prettier": "3.10.1",
+    "shiki": "4.1.0",
+    "ts-docs-fresh": "file:documentation/vendor/ts-docs-reader-31a9d554fea25eb4.tgz",
+    "typescript": "7.1.0-beta"
+  }
+}

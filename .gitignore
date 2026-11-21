@@ -1,0 +1,10 @@
+node_modules/
+.docs-site/
+.local/
+.DS_Store
+# Original conversations are a local research archive, not site content.
+history/
+# Review transcripts and intermediate captures stay local to the collaboration.
+documentation/review/
+experiments/*/review/
+experiments/*/evidence/

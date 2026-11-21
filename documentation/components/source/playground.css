@@ -1,0 +1,680 @@
+/* Compose your own: one working copy, shown in two real slots.
+
+   The editor has two faces. Rules up to "The workbench" style the strip a
+   lesson teaches and what both faces share: the previews, the empty marker
+   and the cues of a move. The workbench's own rules all begin `.workbench`. */
+.editor-panel {
+  display: contents;
+}
+.bar [hidden] {
+  display: none;
+}
+.starter[hidden],
+.workspace[hidden] {
+  display: none;
+}
+.starter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+}
+.start-action {
+  padding: 8px 14px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.start-blank {
+  color: var(--ink);
+  padding: 8px 4px;
+}
+.starter-note {
+  color: var(--quiet);
+  font-size: 12px;
+}
+
+/* Each preview is a host of its own size. These are demonstration slots:
+   ordinary CSS sizes them, and the composition inside responds to the space
+   it is given. Side by side when the page has room, one above the other
+   when it does not; neither can be wider than the page. */
+.previews {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px 24px;
+}
+.preview {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+.preview[data-preview="wide"] {
+  flex: 1 1 560px;
+}
+.preview[data-preview="rail"] {
+  flex: 0 1 260px;
+}
+.preview[data-preview="rail"] .stage {
+  padding-inline-end: 0;
+}
+.preview[data-preview="rail"] .viewport {
+  inline-size: 260px;
+}
+.preview-label {
+  padding: 4px 0;
+}
+/* One readout for each view: the selected item, or its Switchers' result.
+   Two lines are reserved so a selection does not move the controls below. */
+.preview .caption {
+  min-block-size: 2lh;
+}
+.preview .caption:has(.selection:not(:empty)) .note {
+  display: none;
+}
+
+/* A group with no members, or a text with no characters, renders nothing.
+   An outline marks its place. It adds no size to the layout and no extent to
+   a scrolling Shelf; the declaration is where such a node is selected. */
+.rendered :is(.node, .leaf)[data-empty="true"] {
+  outline: 1px dotted color-mix(in srgb, var(--ink) 60%, transparent);
+  outline-offset: 4px;
+}
+.rendered
+  :is(.node, .leaf)[data-empty="true"]:is(
+    [data-chosen="true"],
+    [data-inspected="true"]
+  ) {
+  outline: 1.5px solid var(--ink);
+  outline-offset: 4px;
+}
+
+/* The text of the one selected fact. It sits outside the previews, which are
+   replaced as it changes. */
+.working .text-edit {
+  flex-basis: 100%;
+  flex-wrap: nowrap;
+  margin-block-start: 0;
+}
+.working .text-edit input {
+  min-inline-size: 0;
+}
+.working .text-edit input:disabled {
+  opacity: 0.55;
+}
+.creation {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  flex-basis: 100%;
+}
+.creation label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.creation select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+.creation select:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+@media (pointer: coarse) {
+  .creation select,
+  .starter button {
+    min-block-size: 44px;
+  }
+}
+
+/* Keep editing beside the visible part of a tall comparison. Sticky remains
+   bounded by this workspace and releases at the strip's normal position.
+   Short windows retain ordinary flow so the controls cannot cover the view.
+   This query sizes teaching chrome; primitives still adapt intrinsically. */
+@media (min-height: 40rem) and (pointer: fine),
+  (min-height: 56rem) and (pointer: coarse) {
+  .working {
+    position: sticky;
+    inset-block-end: 0;
+    z-index: 2;
+    margin-block-end: 0;
+    padding-block: 10px 14px;
+    border-block-start: 1px solid var(--line);
+    background: var(--paper);
+    max-block-size: 40dvh;
+    overflow: auto;
+  }
+  /* Native keyboard scrolling reserves the strip's maximum footprint.
+     Mouse selection keeps its position; no rectangle tracking is needed.
+     The workbench has no strip over its previews. */
+  :host(:not([standalone])) .rendered .node[tabindex="0"]:focus-visible {
+    scroll-margin-block-end: 42dvh;
+  }
+}
+.working .inside-action,
+.working .after-action {
+  color: var(--ink);
+  font-weight: 600;
+}
+/* Their wording follows the selection; reserve room so neighbors stay put. */
+.working .inside-action {
+  min-inline-size: 10em;
+  text-align: start;
+}
+.working .after-action {
+  min-inline-size: 8em;
+  text-align: start;
+}
+@media (forced-colors: active) {
+  .rendered :is(.node, .leaf)[data-empty="true"] {
+    outline: 1px dotted GrayText;
+    outline-offset: 4px;
+  }
+  .rendered
+    :is(.node, .leaf)[data-empty="true"]:is(
+      [data-chosen="true"],
+      [data-inspected="true"]
+    ) {
+    outline: 2px solid Highlight;
+    outline-offset: 4px;
+  }
+  .start-action {
+    border-color: ButtonText;
+  }
+}
+
+/* Move keeps the authored selection while choosing a separate destination.
+   Both are painted on existing boxes; no measured overlay participates. */
+/* Every moving member has its own solid edge, including a run and forced
+   colors. Inset edges survive native clipping inside a scrolling Shelf. */
+.workspace[data-moving]
+  .rendered
+  :is(.node, .leaf)[data-chosen="true"]:not([data-empty="true"]) {
+  outline: 1.5px solid var(--ink);
+  outline-offset: -1.5px;
+}
+.rendered :is(.node, .leaf)[data-destination] {
+  outline: 2px dashed var(--ink);
+  outline-offset: -2px;
+}
+/* A destination underline coexists with the ordinary solid focus ring. */
+.code-name[data-destination] {
+  text-decoration: underline dashed;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+/* While a move's destination is being chosen, its controls stand in for
+   the others. */
+.workspace[data-moving]
+  .working
+  > :is(.text-edit, .arrangement, .creation, .composition-actions, .history),
+.workspace[data-moving] .inspector-body {
+  display: none;
+}
+.move-controls {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  gap: 6px 16px;
+}
+.move-source,
+.move-destination {
+  flex-basis: 100%;
+  overflow-wrap: anywhere;
+}
+.move-source {
+  font-weight: 600;
+}
+.move-destination {
+  color: var(--quiet);
+}
+.move-placements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+}
+.move-placements button:not(.cancel-move):enabled,
+.move-action:enabled {
+  color: var(--ink);
+  font-weight: 600;
+}
+.move-placements .cancel-move {
+  margin-inline-start: 12px;
+}
+@media (forced-colors: active) {
+  .workspace[data-moving] .rendered :is(.node, .leaf)[data-chosen="true"] {
+    outline-color: Highlight;
+  }
+  .rendered :is(.node, .leaf)[data-destination] {
+    outline-color: CanvasText;
+  }
+  .code-name[data-destination] {
+    text-decoration-color: CanvasText;
+  }
+}
+
+/* Empty groups have no area to paint inside; mark their native zero-sized
+   box, with a stronger dash than the idle dotted placeholder. Code remains
+   their complete selector. */
+.rendered :is(.node, .leaf)[data-empty="true"][data-destination] {
+  outline: 2px dashed var(--ink);
+  outline-offset: 4px;
+}
+@media (forced-colors: active) {
+  .code-name[data-chosen="true"] {
+    text-decoration: underline solid;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  .code-name[data-destination] {
+    text-decoration-style: dashed;
+  }
+  .rendered :is(.node, .leaf)[data-empty="true"][data-destination] {
+    outline-color: CanvasText;
+  }
+}
+
+/* Scrollable Shelves are keyboard stops. Their native focus ring takes
+   precedence while focused; the code cue and destination label remain. */
+.rendered .node[data-destination]:focus-visible,
+.workspace[data-moving] .rendered .node[data-chosen="true"]:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+@media (forced-colors: active) {
+  .rendered .node[data-destination]:focus-visible,
+  .workspace[data-moving] .rendered .node[data-chosen="true"]:focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   The workbench: the editor on its own page.
+
+   The result is on top, in its two real slots. Below it the hierarchy sits
+   beside an inspector for whatever is selected there. Nothing here sizes a
+   composition: these rules lay out editing chrome, and the previews remain
+   hosts that ordinary CSS sizes.
+
+   Type is sized on the chrome and never on an ancestor of the previews: the
+   separation between a row's members follows the font size it inherits.
+   ------------------------------------------------------------------------ */
+:host([standalone]) {
+  margin: 0;
+}
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+.workbench [hidden] {
+  display: none !important;
+}
+.workbench h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+/* The chrome's own buttons. Names in the hierarchy have their own rules. */
+.workbench
+  :where(.document-actions, .hierarchy-head, .view-choice, .inspector)
+  button {
+  padding: 6px 0;
+  color: var(--ink);
+}
+.workbench
+  :where(.document-actions, .hierarchy-head, .view-choice, .inspector)
+  button:disabled {
+  color: var(--quiet);
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* The result, and what acts on the whole composition. */
+.workbench .results {
+  min-inline-size: 0;
+}
+.workbench .results-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 24px;
+  margin-block-end: 12px;
+  font-size: 12px;
+}
+.workbench .results-hint {
+  margin-block-start: 2px;
+  color: var(--quiet);
+  line-height: 1.5;
+}
+.workbench .document-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+}
+.workbench .result-views:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+/* A tall result scrolls within about half the window, so the editor below
+   stays in reach while it changes. The box has no height of its own: a short
+   result leaves no empty canvas. The gutter is reserved so that a scrollbar
+   appearing cannot change the space the previews are offered. Short windows
+   keep ordinary flow. This query sizes editing chrome only. */
+@media (min-height: 40rem) {
+  .workbench .result-views {
+    max-block-size: 55dvh;
+    /* Room for a focus ring at the box's edges, which now clip. */
+    padding-block: 4px;
+    overflow: hidden auto;
+    scrollbar-gutter: stable;
+  }
+}
+/* The card is as wide as it was asked to be, with the rail beside it. This
+   independent box says how wide the card may become; the 24px is the room
+   the card's stage keeps for its grip. */
+.workbench .preview-limit {
+  position: relative;
+  inline-size: calc(100% - 24px);
+  block-size: 0;
+}
+.workbench .previews {
+  gap: 16px 24px;
+}
+.workbench .preview[data-preview="wide"] {
+  flex: 0 1 auto;
+}
+.workbench .empty-hint {
+  margin-block-start: 8px;
+  color: var(--quiet);
+  font-size: 12px;
+}
+/* The inspector names the selection, so each view keeps reporting what its
+   Switchers did. Showing structure brings the selected group's measured
+   readout back in its place. */
+.workbench
+  .preview:not(:has(.rendered[data-structure="true"]))
+  .caption
+  .selection {
+  display: none;
+}
+.workbench
+  .preview:not(:has(.rendered[data-structure="true"]))
+  .caption
+  .note:not(:empty) {
+  display: inline;
+}
+/* A selected box has a wash and a flat inset edge, one for each member of a
+   run. The edge is the cue that remains where colors are forced. It yields
+   to the empty marker, a move's destination and keyboard focus. */
+.workbench :where(.rendered) :where(.node, .leaf)[data-chosen="true"] {
+  outline: 1.5px solid var(--ink);
+  outline-offset: -1.5px;
+}
+
+/* The hierarchy beside the inspector. */
+.workbench .editing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  padding-block-start: 18px;
+  border-block-start: 1px solid var(--line);
+  font-size: 13px;
+}
+.workbench .hierarchy {
+  min-inline-size: 0;
+  padding-inline-end: 24px;
+}
+.workbench .inspector {
+  min-inline-size: 0;
+  padding-inline-start: 24px;
+  border-inline-start: 1px solid var(--line);
+}
+.workbench .hierarchy-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 16px;
+}
+.workbench .view-choice {
+  display: flex;
+  gap: 16px;
+  margin-block-end: 6px;
+}
+.workbench :is(.hierarchy-head, .view-choice) button {
+  font-size: 12px;
+}
+.workbench .view-choice button {
+  color: var(--quiet);
+}
+/* A choice that is on is underlined, as a link in use would be. */
+.workbench :is(.view-choice button, .several)[aria-pressed="true"] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 5px;
+}
+.workbench .select-help {
+  margin-block-end: 8px;
+  color: var(--quiet);
+  font-size: 12px;
+  line-height: 1.5;
+}
+/* A long composition scrolls in its list. */
+.workbench :is(.outline, .source) {
+  max-block-size: min(24rem, 50dvh);
+  overflow: auto;
+}
+.workbench pre {
+  margin: 0;
+  padding: 4px 8px;
+  border-radius: 0;
+  background: none;
+}
+
+/* The inspector: what is selected, then what can be done with it. */
+.workbench .selection-context {
+  margin-block-end: 14px;
+}
+.workbench .inspector .parent {
+  display: block;
+  padding: 0 0 4px;
+  font-size: 12px;
+}
+.workbench .inspector .selected-title {
+  display: inline;
+  font-size: 17px;
+}
+.workbench .selected-detail {
+  margin-inline-start: 8px;
+  color: var(--quiet);
+  font-size: 12px;
+}
+.workbench .wording {
+  display: grid;
+  gap: 6px;
+  color: var(--quiet);
+  font-size: 12px;
+}
+.workbench .wording input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--color-text, #26332c);
+  font-size: 14px;
+}
+.workbench .choice {
+  min-inline-size: 0;
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+}
+.workbench .choice legend {
+  margin-block-end: 4px;
+  padding: 0;
+  color: var(--quiet);
+  font-size: 12px;
+}
+.workbench .choice label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline-end: 16px;
+  padding-block: 4px;
+  cursor: pointer;
+}
+.workbench .group-arrangement label {
+  display: flex;
+  margin-inline-end: 0;
+}
+.workbench .choice input {
+  inline-size: 1em;
+  block-size: 1em;
+  margin: 0;
+  accent-color: var(--ink);
+}
+.workbench .choice small {
+  margin-inline-start: 4px;
+  color: var(--quiet);
+  font-size: 11px;
+}
+.workbench .choice p {
+  margin-block-start: 6px;
+  color: var(--quiet);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.workbench .add-area {
+  margin-block-start: 18px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid var(--line);
+}
+.workbench .insertion-context {
+  color: var(--quiet);
+  font-size: 12px;
+}
+.workbench .inspector .place-toggle {
+  margin-inline-start: 12px;
+  padding: 0;
+  font-size: 12px;
+}
+.workbench .add-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  margin-block-start: 8px;
+}
+.workbench .add-groups {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 14px;
+  color: var(--quiet);
+  font-size: 12px;
+}
+.workbench .selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+  margin-block-start: 12px;
+  font-size: 12px;
+}
+/* An action that does not apply to the selection is not shown. */
+.workbench .selection-actions button:disabled {
+  display: none;
+}
+.workbench .inspector .move-action {
+  font-weight: 400;
+}
+.workbench .inspector .remove-action {
+  margin-inline-start: auto;
+  color: var(--quiet);
+}
+/* The one action a selection most invites: adding to it, or grouping a run. */
+.workbench .inspector .add-text,
+.workbench .inspector[data-multiple] .group-action {
+  padding: 6px 12px;
+  border-radius: 3px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+}
+.workbench .inspector .add-text:disabled,
+.workbench .inspector[data-multiple] .add-text {
+  padding: 6px 0;
+  background: none;
+  color: var(--ink);
+  font-weight: 400;
+}
+.workbench .inspector .add-text:disabled {
+  color: var(--quiet);
+}
+.workbench .move-source {
+  font-size: 15px;
+}
+.workbench .author-status {
+  display: block;
+  min-block-size: 1lh;
+  margin-block-start: 14px;
+  color: var(--quiet);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (width < 44rem) {
+  .workbench .editing {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workbench .hierarchy {
+    padding-inline-end: 0;
+  }
+  .workbench .inspector {
+    margin-block-start: 16px;
+    padding: 16px 0 0;
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line);
+  }
+  .workbench :is(.outline, .source) {
+    max-block-size: 14rem;
+  }
+}
+@media (pointer: coarse) {
+  .workbench
+    :where(.document-actions, .hierarchy-head, .view-choice, .inspector)
+    button,
+  .workbench .choice label,
+  .workbench .wording input {
+    min-block-size: 44px;
+  }
+}
+@media (forced-colors: active) {
+  /* Stronger than the edge every box gets while structure is shown, and
+     still behind the empty marker, a destination and keyboard focus. */
+  .workbench
+    .rendered
+    :is(.node, .leaf)[data-chosen="true"]:not(
+      [data-empty],
+      [data-destination],
+      :focus-visible
+    ) {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+  .workbench .inspector:not([data-multiple]) .add-text:enabled,
+  .workbench .inspector[data-multiple] .group-action {
+    border: 1px solid ButtonText;
+  }
+}

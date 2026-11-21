@@ -1,0 +1,89 @@
+/* The composition as an outline. Rows are flat and square: a selected row
+   has a wash and stronger words, a move's destination a dashed underline,
+   and keyboard focus the ring. Each survives without color. */
+.outline ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.outline-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  inline-size: 100%;
+  padding-block: 6px;
+  /* Script states how deeply a node is nested; this gives it a length. */
+  padding-inline: calc(8px + var(--depth, 0) * 16px) 8px;
+  border-radius: 0;
+  color: inherit;
+  font-size: 13px;
+  text-align: start;
+}
+.row-kind {
+  flex: none;
+  color: var(--quiet);
+  font-size: 11px;
+}
+.row-label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.outline-row[data-empty] .row-label {
+  color: var(--quiet);
+}
+/* Says in words what a row is during a move: "moving" or "destination". */
+.row-state {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--ink);
+  font-size: 11px;
+}
+.row-state:empty {
+  display: none;
+}
+.outline-row:hover,
+.outline-row[data-inspected] {
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+.outline-row[data-chosen="true"] {
+  background: color-mix(in srgb, var(--ink) 11%, transparent);
+}
+.outline-row[data-chosen="true"] .row-label {
+  color: var(--ink);
+  font-weight: 600;
+}
+.outline-row[data-destination] .row-label {
+  text-decoration: underline dashed;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+/* Inside the row, so the list's scrolling box cannot clip it. */
+.outline-row:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+@media (forced-colors: active) {
+  /* The wash is not painted here; an underline carries the selection. */
+  .outline-row[data-chosen="true"] .row-label {
+    text-decoration: underline solid;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  .outline-row[data-destination] .row-label {
+    text-decoration-style: dashed;
+  }
+  .row-state {
+    color: CanvasText;
+  }
+  .outline-row:focus-visible {
+    outline-color: Highlight;
+  }
+}
+@media (pointer: coarse) {
+  .outline-row {
+    align-items: center;
+    min-block-size: 44px;
+  }
+}

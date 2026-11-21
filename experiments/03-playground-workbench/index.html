@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Axiomatic · Workbench study</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --color-background: light-dark(#fff, #161b22);
+      --color-text: light-dark(#252b33, #e4e8ee);
+      --color-text-aside: light-dark(#657080, #a5afbe);
+      --color-link: light-dark(#245e9c, #9dc8f5);
+      --color-accent: light-dark(#e4e8ee, #38414d);
+      background: var(--color-background);
+      color: var(--color-text);
+      font:
+        15px/1.5 system-ui,
+        sans-serif;
+      scrollbar-gutter: stable;
+    }
+    body {
+      margin: 0;
+    }
+    header {
+      padding: 18px 32px;
+      border-bottom: 1px solid var(--color-accent);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      align-items: baseline;
+    }
+    header strong {
+      font-weight: 650;
+    }
+    header span {
+      color: var(--color-text-aside);
+      font-size: 12px;
+    }
+    main {
+      max-width: 1160px;
+      margin: auto;
+      padding: 30px 32px 64px;
+    }
+    @media (width < 600px) {
+      main {
+        padding: 20px 16px;
+      }
+      header {
+        padding-inline: 16px;
+      }
+    }
+  </style>
+  <header>
+    <strong>Axiomatic</strong
+    ><span>Interaction study · not saved; reload resets it</span>
+  </header>
+  <main><axiomatic-workbench-study></axiomatic-workbench-study></main>
+  <script type="module" src="./workbench.js"></script>
+</html>

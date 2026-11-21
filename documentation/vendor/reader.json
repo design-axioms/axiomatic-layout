@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "package": "ts-docs-fresh@0.1.0",
+  "archive": "ts-docs-reader-31a9d554fea25eb4.tgz",
+  "sha256": "31a9d554fea25eb470c82fa09725987ea2036a599cb1335f18cb5ec9a8d49358",
+  "bytes": 2319997,
+  "repository": "vercel-labs/ts-docs",
+  "path": "reader",
+  "branch": "wycats/fresh-reader-delivery",
+  "base": "c6041c742aa23767569dd28de6662e4ec4cc51b4",
+  "commit": "e37b7568a92397512301399e0393ef4b4eabe220",
+  "packedWith": "Linux CI 42283688515 / Fresh reader 128118919586, pnpm pack, Node 24",
+  "adoption": "Copied exact qualified archive already adopted by the Glade plugin lesson; verified bytes and SHA-256 on 2026-11-19."
+}

@@ -1,0 +1,102 @@
+/* Inspection follows real composition boxes. It contributes no layout size. */
+.rendered {
+  position: relative;
+  /* Probe copies elsewhere cannot capture these path-derived anchor names. */
+  anchor-scope: all;
+}
+.rendered[data-structure="true"] :is(.node, .leaf) {
+  background-color: var(--inspection-fill);
+}
+.rendered :is(.node, .leaf)[data-inspected="true"] {
+  outline: 1.5px solid var(--ink);
+  outline-offset: -1.5px;
+}
+/* Each band is attached to the selected parent's real children. Both axes
+   are expressed; overlapping anchors on the other axis produce an empty band.
+   No measured rectangles or copied gap lengths participate in this decoration. */
+.rendered .node:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.rendered .node[data-inspected="true"] {
+  position: relative;
+}
+.inspection-gap {
+  position: absolute;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 3px,
+    color-mix(in srgb, var(--ink) 35%, transparent) 3px 3.5px,
+    transparent 3.5px 4px
+  );
+}
+.inspection-gap[data-axis="block"] {
+  inset-inline: 0;
+  inset-block-start: anchor(var(--before) end);
+  inset-block-end: anchor(var(--after) start);
+}
+.inspection-gap[data-axis="inline"] {
+  inset-block: 0;
+  inset-inline-start: anchor(var(--before) end);
+  inset-inline-end: anchor(var(--after) start);
+}
+.rendered .run-preview {
+  position: absolute;
+  inset-block-start: anchor(var(--run-first) start);
+  inset-inline-start: anchor(var(--run-first) start);
+  inset-inline-end: anchor(var(--run-last) end);
+  inset-block-end: anchor(var(--run-last) end);
+  outline: 1px dashed var(--ink);
+  outline-offset: 2px;
+  pointer-events: none;
+}
+.rendered .run-preview[hidden] {
+  display: none;
+}
+@media (forced-colors: active) {
+  .rendered[data-structure="true"] :is(.node, .leaf) {
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+  }
+  .rendered :is(.node, .leaf)[data-inspected="true"] {
+    outline-width: 2px;
+  }
+  .rendered .node:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 3px;
+  }
+  .rendered :is(.node, .leaf)[data-inspected="true"],
+  .rendered .run-preview {
+    outline-color: Highlight;
+  }
+  .inspection-gap[data-axis="block"],
+  .inspection-gap[data-axis="inline"] {
+    forced-color-adjust: none;
+    background: repeating-linear-gradient(
+      135deg,
+      transparent 0 3px,
+      Highlight 3px 4px
+    );
+    opacity: 0.5;
+  }
+}
+
+/* Numeric captions observe the gap's axis, not the members' changing heights.
+   The inner target is deeper than this primitive's slot and requirement.
+   See inline-observation.ts for the shared observation contract. */
+.inspection-gap > span {
+  position: absolute;
+  inset: 0;
+}
+.inspection-gap [data-observation="gap"] {
+  display: block;
+}
+.inspection-gap[data-axis="inline"] [data-observation="gap"] {
+  inline-size: 100%;
+  block-size: 0;
+}
+.inspection-gap[data-axis="block"] [data-observation="gap"] {
+  inline-size: 0;
+  block-size: 100%;
+}

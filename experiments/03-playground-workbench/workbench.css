@@ -1,0 +1,504 @@
+:host {
+  margin: 0;
+  font-size: 14px;
+  --wash: color-mix(in srgb, var(--line) 25%, var(--paper));
+}
+[hidden] {
+  display: none !important;
+}
+h1 {
+  font-size: 25px;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+  margin: 0;
+}
+h2 {
+  font-size: 14px;
+  font-weight: 650;
+  margin: 0;
+}
+p {
+  line-height: 1.55;
+}
+button,
+summary {
+  font: inherit;
+}
+button {
+  padding: 6px 0;
+  color: var(--ink);
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+summary {
+  cursor: pointer;
+  color: var(--ink);
+}
+.document-bar {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.subtitle {
+  margin-top: 8px;
+  color: var(--quiet);
+  font-size: 13px;
+}
+.document-actions {
+  display: flex;
+  align-items: baseline;
+  gap: 22px;
+  font-size: 12px;
+}
+.examples {
+  position: relative;
+}
+.examples > div {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 30px;
+  z-index: 4;
+  min-width: 190px;
+  background: var(--paper);
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px #0001;
+  border-radius: 6px;
+}
+.examples button {
+  display: block;
+  text-align: start;
+}
+.workbench {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+}
+.editing {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-inline-size: 0;
+  overflow: clip;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin: 16px 16px 8px;
+}
+.section-head button {
+  font-size: 11px;
+  color: var(--quiet);
+}
+.select-help {
+  margin: 0 16px 10px;
+  color: var(--quiet);
+  font-size: 12px;
+}
+.outline {
+  padding: 0 8px 14px;
+  max-block-size: 340px;
+  overflow: auto;
+}
+.outline ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.outline ul ul {
+  margin-inline-start: 12px;
+  padding-inline-start: 8px;
+  border-inline-start: 1px solid var(--line);
+}
+.outline button {
+  display: flex;
+  width: 100%;
+  text-align: start;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 4px;
+  color: inherit;
+  font-size: 12px;
+}
+.outline button:hover {
+  background: var(--wash);
+}
+.outline button[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--ink) 9%, var(--paper));
+  color: var(--ink);
+  box-shadow: inset 2px 0 var(--ink);
+}
+.kind {
+  font-size: 11px;
+  color: var(--quiet);
+  flex-shrink: 0;
+}
+.node-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.inspector {
+  border-top: 1px solid var(--line);
+  padding: 16px;
+}
+.selection-context {
+  margin-bottom: 16px;
+}
+.parent {
+  display: block;
+  font-size: 11px;
+  padding: 0 0 8px;
+}
+.selected-title {
+  display: inline;
+  font-size: 17px;
+}
+.selected-detail {
+  margin-inline-start: 8px;
+  font-size: 12px;
+  color: var(--quiet);
+}
+.wording {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+}
+.words {
+  padding: 9px 10px;
+  inline-size: 100%;
+  min-inline-size: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+  color: inherit;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 18px 0;
+  min-inline-size: 0;
+}
+legend {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.roles label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  margin-inline-end: 9px;
+}
+input[type="radio"] {
+  accent-color: var(--ink);
+  margin: 0;
+}
+.roles p,
+.arrangements p {
+  font-size: 11px;
+  color: var(--quiet);
+  margin-top: 10px;
+}
+.arrangements label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 0;
+}
+.arrangements label span {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+small {
+  color: var(--quiet);
+  font-size: 11px;
+  font-weight: 400;
+}
+.add-area {
+  border-top: 1px solid var(--line);
+  margin-top: 18px;
+  padding-top: 14px;
+}
+.insertion-context {
+  color: var(--quiet);
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+.add-actions {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+}
+.primary {
+  padding: 7px 12px;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 4px;
+  font-weight: 550;
+}
+.add-group > div {
+  margin-top: 8px;
+  display: grid;
+  gap: 4px;
+}
+.add-group[open] {
+  flex-basis: 100%;
+}
+.add-group button {
+  text-align: start;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.add-group small {
+  margin-inline-start: 8px;
+}
+.selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 15px;
+  font-size: 11px;
+}
+.selection-actions .remove {
+  color: var(--quiet);
+  margin-inline-start: auto;
+}
+.feedback {
+  font-size: 11px;
+  color: var(--quiet);
+  padding: 0 16px 14px;
+}
+.feedback:empty {
+  display: none;
+}
+.results {
+  min-inline-size: 0;
+}
+.result-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.result-heading p {
+  color: var(--quiet);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.result-heading button {
+  font-size: 11px;
+}
+.previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 24px;
+  align-items: start;
+}
+.preview {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+.preview[data-preview="rail"] .viewport {
+  inline-size: 260px;
+}
+.preview[data-preview="rail"] .stage {
+  padding-inline-end: 0;
+}
+.preview .caption {
+  min-block-size: 2lh;
+}
+.preview .caption .selection {
+  display: none;
+}
+.empty-hint {
+  font-size: 12px;
+  color: var(--quiet);
+  margin-top: 12px;
+}
+.source {
+  border-top: 1px solid var(--line);
+  margin-top: 28px;
+  padding-top: 16px;
+}
+.source summary {
+  font-size: 12px;
+  color: var(--quiet);
+}
+.source pre {
+  margin-top: 14px;
+  padding: 18px;
+  background: var(--wash);
+  border-radius: 5px;
+}
+.rendered :is(.node, .leaf)[data-chosen="true"] {
+  outline: 1.5px solid var(--ink);
+  outline-offset: -1.5px;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+}
+@media (width < 700px) {
+  .workbench {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+  .editing {
+    max-inline-size: 600px;
+  }
+  .outline {
+    max-block-size: 230px;
+  }
+}
+@media (pointer: coarse) {
+  button,
+  summary,
+  .words,
+  fieldset label {
+    min-block-size: 44px;
+  }
+}
+@media (forced-colors: active) {
+  .outline button[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+  }
+  .primary {
+    border: 1px solid ButtonText;
+  }
+}
+
+.view-choice {
+  display: flex;
+  gap: 14px;
+  margin: 0 16px 12px;
+  font-size: 11px;
+}
+.view-choice button {
+  color: var(--quiet);
+  padding: 4px 0;
+  border-bottom: 1px solid transparent;
+}
+.view-choice button[aria-pressed="true"] {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.source {
+  margin: 0;
+  border: 0;
+  padding: 0 8px 14px;
+  max-block-size: 340px;
+  overflow: auto;
+}
+.source pre {
+  margin: 0;
+  padding: 8px;
+  background: none;
+  font-size: 11px;
+}
+
+@media (width < 700px) {
+  .results {
+    grid-row: 1;
+  }
+  .editing {
+    max-inline-size: none;
+  }
+}
+
+/* The result stays together; selecting and editing share one work surface. */
+.workbench {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.results,
+.editing {
+  inline-size: 100%;
+}
+.editing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+}
+.inspector {
+  border-top: 0;
+  border-inline-start: 1px solid var(--line);
+  padding: 20px 24px;
+}
+.feedback {
+  grid-column: 2;
+  margin: 0;
+  padding-inline: 24px;
+}
+.outline {
+  max-block-size: 360px;
+}
+.result-heading {
+  margin-bottom: 12px;
+}
+@media (width < 600px) {
+  .editing {
+    display: block;
+  }
+  .inspector {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line);
+    padding: 16px;
+  }
+  .outline {
+    max-block-size: 180px;
+  }
+  .feedback {
+    padding-inline: 16px;
+  }
+}
+
+.inspector[data-multiple] {
+  display: flex;
+  flex-direction: column;
+}
+.inspector[data-multiple] .add-area {
+  order: 2;
+}
+.inspector[data-multiple] .selection-actions {
+  order: 1;
+  margin-top: 0;
+}
+.inspector[data-multiple] .group {
+  padding: 7px 12px;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 4px;
+}
+
+.preview-limit {
+  position: relative;
+  inline-size: calc(100% - 24px);
+  block-size: 0;
+}
+
+.insert-after {
+  font-size: 11px;
+  padding: 0 0 10px;
+}
+.rendered :is(.node, .leaf)[data-empty="true"] {
+  outline: 1px dotted var(--quiet);
+  outline-offset: 4px;
+}
+.rendered :is(.node, .leaf)[data-empty="true"][data-chosen="true"] {
+  outline: 1.5px solid var(--ink);
+  outline-offset: 4px;
+}
