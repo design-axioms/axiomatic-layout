@@ -42,4 +42,8 @@ node scripts/stage-site.ts
 vercel deploy --prod --yes --scope yehuda-katzs-projects --project axiomatic-layout --cwd .local/vercel-static
 ```
 
-The staging script copies only the generated reader artifact, with static-host configuration, into `.local/vercel-static`. It replaces that generated staging directory each time; it leaves the local preview build and research workspace intact. Deployment is currently explicit through the CLI; this checkout has no Git remote or automatic Git deployment configured.
+The staging script copies only the generated reader artifact, with static-host configuration, into `.local/vercel-static`. It replaces that generated staging directory each time; it leaves the local preview build and research workspace intact. Deployment is explicit through the CLI; GitHub checks do not deploy automatically.
+
+## Contribute
+
+Development lives in [design-axioms/axiomatic-layout](https://github.com/design-axioms/axiomatic-layout). Changes to `main` go through pull requests and required CI. See [the contribution workflow](CONTRIBUTING.md) for checks, review, and merge approval.
