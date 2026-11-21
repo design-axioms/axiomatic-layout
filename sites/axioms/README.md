@@ -21,6 +21,9 @@ its browser-local drafts belong to that origin. Readers can copy a snapshot link
 there and edit a copy at the new origin to carry a composition across; that does
 not transfer Undo history or other drafts. Preserve `www.axioms.design` for the
 existing Color site's links until a deliberate redirect migration is prepared.
+Non-root requests to the landing project redirect to the same path on that
+existing Color hostname, preserving older apex documentation links as well.
+The landing page keeps its styles inline so it needs no asset routes of its own.
 
 The original Color domain assignment is `axioms.design` redirecting to
 `www.axioms.design`, on project `color-site`. Record any changed assignment and

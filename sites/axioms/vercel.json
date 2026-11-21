@@ -3,5 +3,12 @@
   "framework": null,
   "buildCommand": "",
   "installCommand": "",
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "redirects": [
+    {
+      "source": "/:path(.+)",
+      "destination": "https://www.axioms.design/:path*",
+      "permanent": false
+    }
+  ]
 }
