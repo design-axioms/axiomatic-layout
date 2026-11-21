@@ -143,3 +143,16 @@ Fable owns the editor integration, Neon independently reviews interaction and pr
 
 
 The workbench integration is complete locally. Fable implemented the two editor presentations over the existing editing session, and Neon reviewed its preservation and interaction boundaries. Codex reconciled insertion/focus edge cases, verified old drafts and snapshots, removal/restoration, group moves, Undo, resizing, keyboard states, narrow/tall compositions and the full handoff on the fixed-source static site. All 137 tests, type checking, formatting and the static build pass. The selected row is flat, without the curved active accent. Existing storage/serialization/model and CSS-first primitive modules are unchanged. No new deployment has been made; detailed evidence and limits are in the linked acceptance record.
+
+
+## Bring your own content: authorized 21 November 2026
+
+Yehuda approved the next library experiment: the investigation's real actions first, then nested authored groups. Preserve application-owned DOM, native semantics, focus, state and CSS-first adaptation. Fable implements the adapter; Neon reviews its contract and interaction; Codex owns the consumer, independent qualification and PR integration. The existing guide renderer, playground, drafts and snapshots remain supported consumers.
+
+The first child contract is non-wrapping, natural-width actions and labels. Test flat actions before nested Switcher/Stack arrangements, with independent requirements and outside-in decisions. No live interactive subtree may be duplicated for measurement or replaced on adaptation. A mechanical sizing representation is not automatically forbidden; any new measurement explains inputs, invalidation and consumer.
+
+Application chrome may retain wrapping and authored thresholds; it is not the experiment's consumer. Use a separate investigation specimen, deriving hierarchy spacing structurally rather than requiring per-group gap choices. New names are provisional and packaging remains later work.
+
+**Decision boundary:** bring Yehuda back in before selecting the prose sizing contract. Prose, images and independently bounded components are not part of this implementation authorization. PR publication/review follows the repository workflow; merge and production deployment remain separate actions.
+
+The natural-action increment is implemented and qualified locally. Fable delivered the authored-element adapter and lifecycle repairs; Neon reviewed the consumer and contract; Codex independently exercised the application and both adapters. All 18 authored-content browser reports pass in Chromium and Safari, the existing controlled-content suite passes 130 reports in Chromium, and all 160 unit tests pass. The guide links to the standalone consumer. Prose sizing remains a user decision; merge and deployment remain separate from this qualification. The contract and limitations are recorded in [the runtime account](CSS-FIRST-RUNTIME.md#application-owned-actions).

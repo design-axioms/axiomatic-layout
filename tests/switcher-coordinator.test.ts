@@ -262,3 +262,122 @@ test("a document has one coordinator and one observer, however many roots use it
     /window/,
   );
 });
+
+/** A Switcher whose requirement is the sum of two measured boxes. */
+function derived() {
+  const { coordinator, observer } = setup();
+  const switcher = new Box(),
+    slot = new Box(),
+    first = new Box(),
+    second = new Box();
+  const parts = new Map<Box, number>();
+  let asked = 0;
+  const registration = coordinator.registerDerived({
+    switcher: switcher as unknown as Element,
+    slot: slot as unknown as Element,
+    requirement() {
+      asked++;
+      if (parts.size === 0) return undefined;
+      return [...parts.values()].reduce((sum, size) => sum + size, 0);
+    },
+  });
+  const stops = [first, second].map((part) =>
+    coordinator.measure(part as unknown as Element, (entry) => {
+      parts.set(part, entry.contentBoxSize[0]!.inlineSize);
+      registration.invalidate();
+    }),
+  );
+  return {
+    coordinator,
+    observer,
+    switcher,
+    slot,
+    first,
+    second,
+    parts,
+    registration,
+    stops,
+    asked: () => asked,
+  };
+}
+
+test("a derived requirement is asked for once the whole delivery is in", () => {
+  for (const order of ["parts first", "slot first", "slot between"]) {
+    const { observer, switcher, slot, first, second, asked } = derived();
+    const reports = {
+      "parts first": [first, second, slot],
+      "slot first": [slot, first, second],
+      "slot between": [first, slot, second],
+    }[order]!.map((box) => [box, box === slot ? 300 : 150, 20] as const);
+    observer.deliver(...reports);
+    assert.equal(asked(), 1, order);
+    assert.deepEqual(switcher.writes, ["row"], order);
+  }
+  const { observer, switcher, slot, first, second } = derived();
+  observer.deliver([slot, 300, 0], [first, 150, 20], [second, 151, 20]);
+  assert.deepEqual(switcher.writes, ["column"]);
+  observer.deliver([second, 150, 20]);
+  assert.deepEqual(switcher.writes, ["column", "row"]);
+});
+
+test("invalidating between deliveries decides at once from the sizes held", () => {
+  const { coordinator, observer, switcher, slot, first, second, ...held } =
+    derived();
+  const seen: SwitcherDecision[][] = [];
+  coordinator.trace = (decisions) => seen.push([...decisions]);
+  observer.deliver([slot, 300, 0], [first, 150, 20], [second, 200, 20]);
+  assert.deepEqual(switcher.writes, ["column"]);
+
+  // The registrant stops counting a part: no box reports that.
+  held.parts.delete(second);
+  held.registration.invalidate();
+  assert.deepEqual(switcher.writes, ["column", "row"]);
+  assert.deepEqual(seen.at(-1), [
+    {
+      switcher,
+      slot: 300,
+      requirement: 150,
+      arrangement: "row",
+      written: true,
+    },
+  ]);
+
+  // Nothing to compare: the arrangement is kept.
+  held.parts.clear();
+  held.registration.invalidate();
+  assert.deepEqual(switcher.writes, ["column", "row"]);
+});
+
+test("a derived Switcher and its measured boxes are released separately", () => {
+  const { coordinator, observer, switcher, slot, first, second, ...held } =
+    derived();
+  assert.equal(coordinator.size, 1);
+  assert.deepEqual([...observer.targets], [slot, first, second]);
+  assert.throws(
+    () => coordinator.measure(first as unknown as Element, () => {}),
+    /already observed/,
+  );
+  assert.throws(
+    () =>
+      coordinator.registerDerived({
+        switcher: switcher as unknown as Element,
+        slot: slot as unknown as Element,
+        requirement: () => 0,
+      }),
+    /already registered/,
+  );
+
+  held.registration.unregister();
+  held.registration.unregister();
+  assert.equal(coordinator.size, 0);
+  assert.deepEqual([...observer.targets], [first, second]);
+  observer.deliver([slot, 300, 0], [first, 100, 20]);
+  held.registration.invalidate();
+  assert.equal(switcher.arrangement, null, "no longer decided");
+
+  for (const stop of held.stops) stop();
+  for (const stop of held.stops) stop();
+  assert.equal(observer.targets.size, 0);
+  observer.deliver([first, 120, 20]);
+  assert.equal(held.parts.get(first), 100, "no longer received");
+});

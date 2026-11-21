@@ -109,5 +109,13 @@ The [composition source](source:experiments/01-reading-path/composition.js) cont
 
 The next question is what each primitive needs to expose to its surroundings. The simple examples use their internal separation; the investigation uses a destination role. A library foundation should make those contracts small enough to compose and strong enough that authors can trust the result.
 
+## Bring your own content
+
+The next experiment keeps the investigation's links and buttons as native, application-owned elements. Try following the investigation, changing an action's label, and resizing the same composition in a card and a rail. Then compare one group with nested groups: the outer arrangement can change while the secondary actions remain together.
+
+[Open Bring your own content](/_media/documentation/bring-your-own-content/index.html).
+
+This experiment starts with actions that keep their natural width. The authoring API is provisional; wrapping prose has a separate sizing question still to settle.
+
 <script type="module" src="/_media/documentation/components/layout-examples.js"></script>
 <link rel="modulepreload" href="/_media/experiments/01-reading-path/composition.js">

@@ -18,6 +18,7 @@
     "documentation/components/source/**/*.ts",
     "scripts/**/*.ts",
     "tests/**/*.ts",
-    "documentation/review/**/*.ts"
+    "documentation/review/**/*.ts",
+    "experiments/04-bring-your-own-content/**/*.ts"
   ]
 }
