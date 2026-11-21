@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Authored content qualification · Axiomatic</title>
+    <link rel="stylesheet" href="./checks.css" />
+  </head>
+  <body>
+    <header>
+      <a href="./index.html">Bring your own content</a
+      ><span>Browser qualification</span>
+    </header>
+    <main>
+      <h1>Authored content qualification</h1>
+      <p>
+        These checks exercise real DOM, browser sizing, focus, state, and
+        lifecycle. They do not write drafts or contact external services.
+      </p>
+      <button id="run" type="button">Run checks</button>
+      <p role="status" id="result">Ready.</p>
+      <ol id="reports"></ol>
+      <details>
+        <summary>Results as JSON</summary>
+        <pre id="json"></pre>
+      </details>
+      <div id="fixture-stage"></div>
+    </main>
+    <script type="module" src="./checks.js"></script>
+  </body>
+</html>

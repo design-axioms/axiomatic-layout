@@ -1,9 +1,11 @@
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import { buildOwnedContent } from "./build-owned-content.ts";
 import { buildComponents } from "./build-components.ts";
 
 const watcher = await buildComponents(true);
+const ownedWatcher = await buildOwnedContent(true);
 const require = createRequire(import.meta.url);
 const reader = join(
   dirname(require.resolve("ts-docs-fresh/package.json")),
@@ -18,6 +20,7 @@ async function close() {
   closing = true;
   child.kill("SIGTERM");
   await watcher?.dispose();
+  await ownedWatcher?.dispose();
 }
 process.once("SIGINT", () => void close());
 process.once("SIGTERM", () => void close());

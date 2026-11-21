@@ -90,3 +90,8 @@ Preserve equality-as-row from the current implementation and the [original canva
 A change should explain the behavior it preserves, why native CSS does not express that behavior, which inputs it observes, and how it invalidates cached results. Test the smallest relevant composition and a nested real-text case. Keep measured results distinct from predictions; reduced layout counts alone do not establish a sound architecture or a smooth interaction.
 
 A new browser capability or counterexample may revise a mechanism. Record the evidence and update this baseline where necessary. Historical prose that calls a mechanism immutable or zero-cost is not a substitute for that judgment.
+
+
+## Application-owned content refinement — 21 November 2026
+
+The authorized “Bring your own content” experiment preserves the same axioms while adding a second requirement adapter. Non-wrapping natural-width actions can supply their real border boxes; the adapter combines observed widths and CSS gaps into a mode-independent requirement. No live controls are cloned. This does not generalize the teaching max-content policy to prose or arbitrary components. See [the runtime contract](CSS-FIRST-RUNTIME.md#application-owned-actions) for inputs, native delivery dependencies, invalidation and the explicit child boundary.

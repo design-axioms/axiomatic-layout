@@ -1,0 +1,26 @@
+#fixture-stage {
+  margin-block-start: 2rem;
+  overflow: auto;
+}
+.test-host {
+  font:
+    14px/1.4 system-ui,
+    sans-serif;
+  margin-block: 1rem;
+  scrollbar-gutter: stable;
+}
+.test-host button {
+  font: inherit;
+  margin: 0;
+  padding: 0.35em 0.65em;
+  border: 1px solid currentColor;
+}
+.test-host [hidden] {
+  display: none !important;
+}
+.test-host [data-axiomatic-atom] {
+  white-space: nowrap;
+}
+#reports li {
+  margin-block: 0.35rem;
+}

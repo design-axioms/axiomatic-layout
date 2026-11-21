@@ -10,7 +10,9 @@
  *
  * The module knows nothing about how a Switcher is rendered. A registration
  * names the two boxes that carry its numbers; `primitives.ts` builds them for
- * the controlled Composition tree.
+ * the controlled Composition tree. Where no one box can carry the
+ * requirement, a registrant derives it from several reported sizes instead:
+ * `authored-elements.ts` does so for elements an application owns.
  *
  * Dependencies between Switchers are carried by the browser, not by a tree
  * walk here. Within a frame, ResizeObserver delivers in rounds, and after a
@@ -23,6 +25,10 @@
  * - Any other observer of a box that a published arrangement can resize
  *   watches from deeper than that Switcher's slot and requirement. Otherwise
  *   its notification waits a frame and the browser reports a loop error.
+ * - A nested Switcher's slot is also deeper than every box whose report can
+ *   change the decision of a Switcher around it. A derived requirement is
+ *   made from boxes throughout the subtree, so this is a real constraint
+ *   there (see {@link SwitcherCoordinator.measure}).
  */
 
 export type Arrangement = "row" | "column";
@@ -63,89 +69,182 @@ export interface SwitcherRegistration {
   readonly requirement: Element;
 }
 
-/** What one observer delivery concluded for one Switcher. */
+/**
+ * A Switcher whose requirement the registrant derives from several reported
+ * sizes, where no single box can carry it. The slot is as in
+ * {@link SwitcherRegistration}.
+ */
+export interface DerivedSwitcherRegistration {
+  readonly switcher: Element;
+  readonly slot: Element;
+  /**
+   * The row requirement now, or `undefined` while the Switcher is not
+   * rendered. It is asked for when the Switcher is decided, and must answer
+   * from numbers the registrant already holds: it must not read layout, and
+   * it must not depend on any Switcher's current arrangement.
+   */
+  requirement(): number | undefined;
+}
+
+export interface DerivedSwitcher {
+  /**
+   * Says the requirement may have changed. Inside a delivery the Switcher is
+   * decided with the rest of that delivery; otherwise it is decided now.
+   */
+  invalidate(): void;
+  unregister(): void;
+}
+
+/** What one decision concluded for one Switcher. */
 export interface SwitcherDecision {
   readonly switcher: Element;
   readonly slot: number;
-  /** `undefined` while the requirement box is not rendered. */
+  /** `undefined` while the requirement is not rendered. */
   readonly requirement: number | undefined;
   /** `undefined` when the previous arrangement was kept for lack of a requirement. */
   readonly arrangement: Arrangement | undefined;
   readonly written: boolean;
 }
 
-interface Measured {
-  readonly registration: SwitcherRegistration;
+interface Deciding {
+  readonly switcher: Element;
   /** Starts at zero, as an unreported ResizeObserver size does. */
   slot: number;
-  requirement: number | undefined;
+  readonly requirement: () => number | undefined;
 }
 
+type Receive = (entry: ResizeObserverEntry) => void;
+
 export class SwitcherCoordinator {
-  /** Diagnostic hook for fixtures: receives every delivery's conclusions. */
+  /** Diagnostic hook for fixtures: receives every round of decisions. */
   trace: ((decisions: readonly SwitcherDecision[]) => void) | undefined;
 
   readonly #observer: ResizeObserver;
-  // Registration owners must unregister: native observation retains targets.
+  // Owners must stop what they start: native observation retains targets.
   // `size` exposes outstanding registrations for lifecycle qualification.
-  readonly #measured = new WeakMap<Element, Measured>();
+  readonly #receivers = new WeakMap<Element, Receive>();
   #size = 0;
+  /** The Switchers to decide at the end of the delivery in progress. */
+  #affected: Set<Deciding> | undefined;
 
   constructor(Observer: typeof ResizeObserver) {
     this.#observer = new Observer((entries) => this.#receive(entries));
   }
 
-  /** Registrations not yet unregistered. */
+  /** Switcher registrations not yet unregistered. */
   get size(): number {
     return this.#size;
   }
 
   /** Starts deciding for a Switcher. Call the returned function to stop. */
   register(registration: SwitcherRegistration): () => void {
-    const { slot, requirement } = registration;
-    if (this.#measured.has(slot) || this.#measured.has(requirement))
+    const { switcher, slot, requirement } = registration;
+    if (this.#receivers.has(slot) || this.#receivers.has(requirement))
       throw new Error("This Switcher is already registered");
-    const measured: Measured = {
-      registration,
-      slot: 0,
-      requirement: undefined,
+    let reported: number | undefined;
+    const deciding = this.#decide(switcher, slot, () => reported);
+    const stop = this.measure(requirement, (entry) => {
+      const size = entry.contentBoxSize[0];
+      if (!size) return;
+      const rendered = size.inlineSize > 0 || size.blockSize > 0;
+      reported = rendered ? size.inlineSize : undefined;
+      this.#affected?.add(deciding.state);
+    });
+    return () => {
+      deciding.stop();
+      stop();
     };
-    this.#measured.set(slot, measured);
-    this.#measured.set(requirement, measured);
-    this.#observer.observe(slot);
-    this.#observer.observe(requirement);
+  }
+
+  /** Starts deciding for a Switcher whose requirement the registrant holds. */
+  registerDerived(registration: DerivedSwitcherRegistration): DerivedSwitcher {
+    const { switcher, slot } = registration;
+    if (this.#receivers.has(slot))
+      throw new Error("This Switcher is already registered");
+    const deciding = this.#decide(switcher, slot, () =>
+      registration.requirement(),
+    );
+    let registered = true;
+    return {
+      invalidate: () => {
+        if (!registered) return;
+        if (this.#affected) this.#affected.add(deciding.state);
+        else this.#conclude([deciding.state]);
+      },
+      unregister: () => {
+        registered = false;
+        deciding.stop();
+      },
+    };
+  }
+
+  /**
+   * Reports a box through the shared observer: the numbers a derived
+   * requirement is made from. Every report in a delivery is received before
+   * any Switcher in it is decided. Call the returned function to stop.
+   *
+   * A target that a published arrangement can resize carries the depth
+   * obligation described at the top of this module.
+   */
+  measure(
+    target: Element,
+    receive: Receive,
+    options?: ResizeObserverOptions,
+  ): () => void {
+    if (this.#receivers.has(target))
+      throw new Error("This box is already observed");
+    this.#receivers.set(target, receive);
+    this.#observer.observe(target, options);
+    let measuring = true;
+    return () => {
+      if (!measuring) return;
+      measuring = false;
+      this.#observer.unobserve(target);
+      this.#receivers.delete(target);
+    };
+  }
+
+  #decide(
+    switcher: Element,
+    slot: Element,
+    requirement: () => number | undefined,
+  ) {
+    const state: Deciding = { switcher, slot: 0, requirement };
+    const stop = this.measure(slot, (entry) => {
+      const size = entry.contentBoxSize[0];
+      if (!size) return;
+      state.slot = size.inlineSize;
+      this.#affected?.add(state);
+    });
     this.#size++;
     let registered = true;
-    return () => {
-      if (!registered) return;
-      registered = false;
-      this.#observer.unobserve(slot);
-      this.#observer.unobserve(requirement);
-      this.#measured.delete(slot);
-      this.#measured.delete(requirement);
-      this.#size--;
+    return {
+      state,
+      stop: () => {
+        if (!registered) return;
+        registered = false;
+        stop();
+        this.#size--;
+      },
     };
   }
 
   #receive(entries: readonly ResizeObserverEntry[]) {
-    // Record every delivered number before deciding, so the result cannot
+    // Receive every delivered number before deciding, so the result cannot
     // depend on the order of entries within a delivery.
-    const affected = new Set<Measured>();
-    for (const entry of entries) {
-      const measured = this.#measured.get(entry.target);
-      const size = entry.contentBoxSize[0];
-      if (!measured || !size) continue;
-      if (entry.target === measured.registration.slot) {
-        measured.slot = size.inlineSize;
-      } else {
-        const rendered = size.inlineSize > 0 || size.blockSize > 0;
-        measured.requirement = rendered ? size.inlineSize : undefined;
-      }
-      affected.add(measured);
+    const affected = (this.#affected = new Set());
+    try {
+      for (const entry of entries) this.#receivers.get(entry.target)?.(entry);
+    } finally {
+      this.#affected = undefined;
     }
+    this.#conclude(affected);
+  }
+
+  #conclude(affected: Iterable<Deciding>) {
     const decisions: SwitcherDecision[] = [];
-    for (const { registration, slot, requirement } of affected) {
-      const { switcher } = registration;
+    for (const { switcher, slot, requirement: required } of affected) {
+      const requirement = required();
       // Without a rendered requirement there is nothing to compare. Keeping
       // the last arrangement lets a hidden Switcher reappear undisturbed.
       const arrangement =
