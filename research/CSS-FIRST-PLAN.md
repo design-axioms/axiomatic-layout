@@ -84,3 +84,10 @@ Run relevant model/controller tests, `pnpm check`, `pnpm format:check`, and `pnp
 ## When a stage needs reconsideration
 
 A replacement that cannot retire its predecessor is incomplete. Investigate and fix that locally within agreed behavior; report the concrete conflict if resolution changes scope, author obligations or reader experience. Routine implementation problems do not require another approval.
+
+
+## 5. Bring your own content — 21 November 2026
+
+The authorized next library experiment adds a separate consumer of application-owned actions, first flat and then nested. Its adapter preserves native elements and derives an independent fit requirement from observed natural-width border boxes and CSS gaps. The guide links to the specimen; the editor and its storage/snapshot model continue to use the existing controlled renderer. See [the runtime account](CSS-FIRST-RUNTIME.md#application-owned-actions) and [the experiment](../experiments/04-bring-your-own-content/README.md) for author obligations and qualification.
+
+Fable implements the adapter, Neon reviews its contract, and Codex owns independent browser qualification and integration. The next contract decision belongs with Yehuda: how wrapping prose contributes to intrinsic fit. This increment leaves that question, public packaging, framework bindings and the general spacing algebra open.
