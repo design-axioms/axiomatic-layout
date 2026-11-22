@@ -156,3 +156,9 @@ Application chrome may retain wrapping and authored thresholds; it is not the ex
 **Decision boundary:** bring Yehuda back in before selecting the prose sizing contract. Prose, images and independently bounded components are not part of this implementation authorization. PR publication/review follows the repository workflow; merge and production deployment remain separate actions.
 
 The natural-action increment is implemented and qualified locally. Fable delivered the authored-element adapter and lifecycle repairs; Neon reviewed the consumer and contract; Codex independently exercised the application and both adapters. All 18 authored-content browser reports pass in Chromium and Safari, the existing controlled-content suite passes 130 reports in Chromium, and all 160 unit tests pass. The guide links to the standalone consumer. Prose sizing remains a user decision; merge and deployment remain separate from this qualification. The contract and limitations are recorded in [the runtime account](CSS-FIRST-RUNTIME.md#application-owned-actions).
+
+## Wrapping prose — comparison authorized 22 November 2026
+
+Yehuda authorized a guide experiment to decide how the investigation summary contributes to row fit beside its session link. Readers change one shared width and one wording across two examples. One policy asks for the full unbroken sentence in a row. The other gives the summary a preferred measure capped at 30ch. The cap is a candidate chosen for this comparison. A shorter sentence contributes only its own width.
+
+Both examples have exactly two members, so ordinary flex line wrapping can show the alternatives. A general Switcher with three or more members still needs an atomic decision. Choosing a public prose contract, including whether the author supplies a measure, is a separate decision for Yehuda after trying the comparison.

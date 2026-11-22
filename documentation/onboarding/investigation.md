@@ -117,5 +117,13 @@ The next experiment keeps the investigation's links and buttons as native, appli
 
 This experiment starts with actions that keep their natural width. The authoring API is provisional; wrapping prose has a separate sizing question still to settle.
 
+## When should the summary wrap?
+
+Read the same finding and session link in both examples. In the first, the link stays beside the finding only if the whole finding fits on one line. In the second, the author gives the finding a maximum line length of 30ch, drawn above the text. That leaves room for the link beside a paragraph.
+
+<axiomatic-prose-fit></axiomatic-prose-fit>
+
+Start with the original wording and drag the edge. In a narrow rail, both links land below the finding. With more room, one can move beside it while the other stays below. Where they disagree, hold the width steady and choose the longer wording. Does the link still feel like a next step when it sits beside several lines of text? Widen again and notice that the second finding keeps its line length even when it could use more room.
+
 <script type="module" src="/_media/documentation/components/layout-examples.js"></script>
 <link rel="modulepreload" href="/_media/experiments/01-reading-path/composition.js">
