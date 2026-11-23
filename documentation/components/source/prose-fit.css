@@ -1,0 +1,249 @@
+:host {
+  display: block;
+  margin: 1.5rem 0 2rem;
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  --text: var(--color-text, #26332c);
+  --ink: var(--color-link, #386d98);
+  --line: var(--color-accent, #dce3db);
+  --paper: var(--color-background, #fff);
+  --quiet: var(--color-text-aside, #64706a);
+  /* This experiment's bound on the summary. The second panel's label names
+     the same value. */
+  --prose-measure: 30ch;
+  /* The strip beside the examples that belongs to the grip. */
+  --grip-lane: 28px;
+}
+* {
+  box-sizing: border-box;
+}
+p {
+  margin: 0;
+}
+
+.pair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 24px;
+}
+/* Flex collects lines using each member's hypothetical width before
+   shrinking it. With exactly two members, a wrap puts the link below. */
+.pair > * {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+/* The unbounded summary contributes its full one-line width.
+   The cap applies on either line and a shorter summary stays short. */
+.pair[data-policy="bounded"] > .summary {
+  max-inline-size: var(--prose-measure);
+}
+
+/* The summary and the measure's mark share one font, so that `ch` is the
+   same length in both. */
+.pair,
+.measure {
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+/* The bound, drawn once above the bounded summary. It is as long as the
+   measure whatever the pair is doing. Where the pair is narrower than the
+   measure, the mark runs off the edge instead of ending early. */
+.measure {
+  overflow: hidden;
+  margin-block-end: 6px;
+}
+.measure span {
+  display: block;
+  inline-size: var(--prose-measure);
+  block-size: 5px;
+  border: solid var(--quiet);
+  border-width: 1px 1px 0;
+  opacity: 0.7;
+}
+
+.pair a {
+  color: var(--ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  border-radius: 2px;
+}
+.pair a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* The stage is all the space the page offers. Its end padding is the grip's
+   own lane, so the grip never lies over a link or a control. */
+#stage {
+  padding-inline-end: var(--grip-lane);
+}
+/* The controller observes the width available inside the grip lane. */
+#width-probe {
+  block-size: 0;
+}
+#viewport {
+  inline-size: min(100%, var(--example-width, 550px));
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  min-block-size: 32px;
+  color: var(--quiet);
+  font-size: 0.8125em;
+}
+.bar label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+select,
+input {
+  font: inherit;
+}
+.bar .width {
+  gap: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.width input {
+  field-sizing: content;
+  inline-size: 4ch;
+  min-inline-size: 3ch;
+  max-inline-size: 5ch;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  text-align: end;
+  padding: 3px 0;
+  appearance: textfield;
+}
+.width input:hover,
+.width input:focus {
+  border-bottom-color: var(--line);
+}
+.width input::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+/* Both panels have the same padding inside one frame, so each pair is
+   offered exactly the same inline size. */
+.frame {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+}
+.panel {
+  padding: 14px 20px 18px;
+}
+.panel + .panel {
+  border-block-start: 1px solid var(--line);
+}
+/* What the author asked for. The words that differ between the two are in
+   the text color; the rest is quiet. */
+.choice {
+  margin-block-end: 10px;
+  color: var(--quiet);
+  font-size: 0.8125em;
+  line-height: 1.5;
+}
+.choice b {
+  color: var(--text);
+  font-weight: 600;
+}
+.choice abbr {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+/* The grip fills its lane beside the frame, for the height of both panels. */
+#grip {
+  anchor-name: --prose-fit-grip;
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(100% + 1px);
+  inline-size: var(--grip-lane);
+  border-radius: 3px;
+  color: var(--quiet);
+  cursor: ew-resize;
+  touch-action: none;
+}
+#grip::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline: 0;
+  margin-inline: auto;
+  translate: 0 -50%;
+  inline-size: 5px;
+  block-size: 28px;
+  border-inline: 1px solid currentColor;
+  opacity: 0.55;
+}
+#grip:hover::after,
+#grip:focus-visible::after,
+#grip[data-dragging="true"]::after {
+  opacity: 1;
+  color: var(--ink);
+}
+/* Keep the mark under the pointer while a drag changes the panels' height.
+   The width control reports the pointer's position as `--grip-y`. */
+@supports (left: anchor(--prose-fit-grip center)) {
+  #grip[data-dragging="true"]::after {
+    position: fixed;
+    inset-inline: auto;
+    margin-inline: 0;
+    top: var(--grip-y);
+    left: anchor(--prose-fit-grip center);
+    translate: -50% -50%;
+  }
+}
+
+a:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+/* Inside its lane, so the ring does not cover the frame's edge. */
+#grip:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -3px;
+}
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (pointer: coarse) {
+  :host {
+    --grip-lane: 44px;
+  }
+  .bar label {
+    align-items: center;
+    min-block-size: 44px;
+  }
+}
+@media (forced-colors: active) {
+  #grip {
+    color: ButtonText;
+  }
+  .measure span {
+    opacity: 1;
+  }
+}

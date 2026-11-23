@@ -49,6 +49,7 @@ import {
 import palette from "./composition-palette.generated.css";
 import "./playground.ts";
 import "./playground-page.ts";
+import "./prose-fit.ts";
 
 let sharedWidth = 600;
 let sharedStructure = false;
