@@ -1,6 +1,8 @@
 # Developing the guide
 
-The guide consumes the fresh ts-docs reader, pinned to the verified package also adopted by the Glade plugin lesson. `vendor/reader.json` records its identity; the tarball and lockfile make installation reproducible. The shared ts-docs checkout is unchanged. The reader's root `scrollbar-gutter: stable` also preserves an independent available width when changing example heights makes the page scroll. A host integrating the bare primitives must preserve that condition itself; see [the runtime contract](../research/CSS-FIRST-RUNTIME.md).
+The guide uses the ts-docs reader to supply its Axiomatic Color theme, including the colors inherited by examples inside shadow roots. A clean checkout installs the reader from the committed archive. Its source commit, build and SHA-256 digest are recorded in [the reader manifest](vendor/reader.json).
+
+The reader's root `scrollbar-gutter: stable` preserves an independent available width when changing example heights makes the page scroll. A host integrating the bare primitives must preserve that condition itself. See [the runtime contract](../research/CSS-FIRST-RUNTIME.md).
 
 ## Workflow
 
