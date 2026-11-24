@@ -24,7 +24,7 @@
     "esbuild": "0.25.12",
     "prettier": "3.10.1",
     "shiki": "4.1.0",
-    "ts-docs-fresh": "file:documentation/vendor/ts-docs-reader-31a9d554fea25eb4.tgz",
+    "ts-docs-fresh": "file:documentation/vendor/ts-docs-reader-542a9bc2b953d0d2.tgz",
     "typescript": "7.1.0-beta"
   }
 }

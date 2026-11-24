@@ -1,14 +1,14 @@
 {
   "version": 1,
   "package": "ts-docs-fresh@0.1.0",
-  "archive": "ts-docs-reader-31a9d554fea25eb4.tgz",
-  "sha256": "31a9d554fea25eb470c82fa09725987ea2036a599cb1335f18cb5ec9a8d49358",
-  "bytes": 2319997,
+  "archive": "ts-docs-reader-542a9bc2b953d0d2.tgz",
+  "sha256": "542a9bc2b953d0d256445f1d9ed83c92dedd5ba9b5e220d5b7e3783feb791035",
+  "bytes": 2854062,
   "repository": "vercel-labs/ts-docs",
   "path": "reader",
-  "branch": "wycats/fresh-reader-delivery",
-  "base": "c6041c742aa23767569dd28de6662e4ec4cc51b4",
-  "commit": "e37b7568a92397512301399e0393ef4b4eabe220",
-  "packedWith": "Linux CI 42283688515 / Fresh reader 128118919586, pnpm pack, Node 24",
-  "adoption": "Copied exact qualified archive already adopted by the Glade plugin lesson; verified bytes and SHA-256 on 2026-11-19."
+  "branch": "main",
+  "base": "3545d135a1ee6da11a05828adbb693fe1e72c2f9",
+  "commit": "0d8f3692a54c258b2f66fa127af0cb2c4138d84d",
+  "packedWith": "Linux CI 45305998239 / Fresh reader 138149866129, pnpm pack, Node 24",
+  "adoption": "The Layout guide uses the reader from ts-docs PR #31 with @design-axioms/color@0.1.0-alpha.1. Archive verified against the SHA-256 from the merge build."
 }
