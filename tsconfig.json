@@ -15,6 +15,7 @@
     "skipLibCheck": true
   },
   "include": [
+    "packages/layout/index.ts",
     "documentation/components/source/**/*.ts",
     "scripts/**/*.ts",
     "tests/**/*.ts",

@@ -27,6 +27,15 @@ importers:
         specifier: 7.1.0-beta
         version: 7.1.0-beta
 
+  packages/layout:
+    devDependencies:
+      esbuild:
+        specifier: 0.25.12
+        version: 0.25.12
+      typescript:
+        specifier: 7.1.0-beta
+        version: 7.1.0-beta
+
 packages:
 
   '@design-axioms/color@0.1.0-alpha.1':
