@@ -8,3 +8,5 @@ history/
 documentation/review/
 experiments/*/review/
 experiments/*/evidence/
+
+/packages/layout/dist/

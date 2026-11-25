@@ -1,0 +1,30 @@
+{
+  "name": "@design-axioms/layout",
+  "version": "0.0.0-local.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": {
+      "types": "./style.d.css.ts",
+      "default": "./dist/style.css"
+    }
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/style.css",
+    "style.d.css.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && esbuild index.ts style.css --bundle --format=esm --target=es2024 --outdir=dist",
+    "prepack": "pnpm run build"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "typescript": "7.1.0-beta"
+  }
+}
