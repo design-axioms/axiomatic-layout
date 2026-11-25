@@ -5,7 +5,7 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/packages/layout/index.d.ts",
       "import": "./dist/index.js"
     },
     "./style.css": {
@@ -15,7 +15,7 @@
   },
   "files": [
     "dist/index.js",
-    "dist/index.d.ts",
+    "dist/packages/layout/index.d.ts",
     "dist/style.css",
     "style.d.css.ts"
   ],

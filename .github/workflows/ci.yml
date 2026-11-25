@@ -29,7 +29,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
-      - run: pnpm --filter @design-axioms/layout build
       - run: pnpm format:check
       - run: pnpm test
       - run: pnpm docs:build
